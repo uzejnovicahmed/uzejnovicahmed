@@ -1,7 +1,27 @@
-# This script triggers the Update-ADUserAttributes.ps1 script with dummy values
+<#
+.SYNOPSIS
+    This script triggers the Update-ADUserAttributes.ps1 script with dummy values for testing purposes.
+    Only attributes present in the parameters will be modified.
+    If "clearattribute" is set as the value, the attribute will be cleared.
+    If the attribute value is space or empty, it will not be updated.
+
+.DESCRIPTION
+    The script initializes a hashtable with dummy values for various Active Directory user attributes and passes them to the Update-ADUserAttributes.ps1 script. This allows for testing the functionality of updating and clearing AD user attributes. 
+
+.PARAMETER UserName
+    The username (sAMAccountName) of the user to update or create.
+
+
+.EXAMPLE
+    .\Trigger-UpdateADUserAttributes.ps1
+
+.NOTES
+    Author: Uzejnovic Ahmed
+    Date: 07.06.2024
+#>
 
 # Dummy values for the parameters
-$params = @{
+$paramset1 = @{
     UserName = "jdoe"
     givenName = "John"
     initials = "JD"
@@ -63,9 +83,8 @@ $params = @{
     extensionAttribute13 = "clearattribute"
 }
 
-
-
-$params = @{
+# Alternative set of dummy values for the parameters
+$paramset2 = @{
     UserName = "jdoe"
     givenName = "John"
     initials = "JD"
@@ -78,9 +97,6 @@ $params = @{
     extensionAttribute1 = ""
 }
 
-
-
-
-.\Update_AD_User_Attributes.ps1 @params -verbose
-
-
+# Trigger the Update-ADUserAttributes.ps1 script with the dummy values
+.\Update-ADUserAttributes.ps1 @paramset1 -Verbose
+.\Update-ADUserAttributes.ps1 @paramset2 -Verbose
