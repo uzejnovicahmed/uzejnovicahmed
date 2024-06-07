@@ -63,6 +63,14 @@ param (
     [string]$extensionAttribute13
 )
 
+
+[string]$DomainController = [string](Get-ADDomainController -Discover -forceDiscover -Writable).HostName
+# Set default parameter values for Active Directory cmdlets
+# This will set the server parameter to the retrieved domain controller hostname.
+$PSDefaultParameterValues['*-AD*:Server'] = $DomainController # Set the server parameter to the retrieved domain controller hostname.
+$PSDefaultParameterValues['*-AD*:Identity'] = $UserName # Set the username parameter as default for all ad commands.
+
+
 # Function to update AD user attributes
 function Update-ADUserAttributes {
     param (
@@ -72,7 +80,7 @@ function Update-ADUserAttributes {
 
     try {
         # Check if the user exists (uncomment in production)
-        # $user = Get-ADUser -Identity $UserName -ErrorAction Stop
+        # $user = Get-ADUser -ErrorAction Stop
 
         # Create a hashtable for the attribute updates
         $attributeUpdate = @{}
@@ -91,12 +99,12 @@ function Update-ADUserAttributes {
         } else {
             # Update the attributes
             if ($attributeUpdate.Count -ne 0) {
-                # Set-ADUser -Identity $UserName @attributeUpdate -ErrorAction Stop
+                # Set-ADUser @attributeUpdate -ErrorAction Stop
                 Write-Host "Successfully updated the attributes for user '$UserName'."
             }
             # Clear the attributes
             if ($attributesToClear.Count -ne 0) {
-                # Set-ADUser -Identity $UserName -Clear $attributesToClear -ErrorAction Stop
+                # Set-ADUser -Clear $attributesToClear -ErrorAction Stop
                 Write-Host "Successfully cleared the attributes for user '$UserName'."
             }
         }
