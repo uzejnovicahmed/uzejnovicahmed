@@ -64,11 +64,20 @@ param (
 )
 
 
+$usecredentials = $false
+
 [string]$DomainController = [string](Get-ADDomainController -Discover -forceDiscover -Writable).HostName
 # Set default parameter values for Active Directory cmdlets
 # This will set the server parameter to the retrieved domain controller hostname.
 $PSDefaultParameterValues['*-AD*:Server'] = $DomainController # Set the server parameter to the retrieved domain controller hostname.
 $PSDefaultParameterValues['*-AD*:Identity'] = $UserName # Set the username parameter as default for all ad commands.
+
+if($usecredentials -eq $true){
+    $credential = Get-Credential
+    $PSDefaultParameterValues['*-AD*:Credential'] = $credential # Set the credential parameter
+}
+
+
 
 
 # Function to update AD user attributes
